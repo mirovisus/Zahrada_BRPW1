@@ -1,4 +1,3 @@
-# Zahrada_BRPW1
 # Portál pro majitele zahrad a zahradní pracovníky
 
 Webová aplikace pro správu zahrad: majitel vytváří profil zahrady a zadává požadavky na práci; pracovník prohlíží dostupné poptávky (vč. filtrování podle města), hlásí se na ně a po provedení přidává report s fotkami a popisem.
