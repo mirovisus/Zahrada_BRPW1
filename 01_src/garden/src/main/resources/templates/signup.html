@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup Form</title>
+
+  <link rel="stylesheet" th:href="@{/styles/style.css}">
+  <link rel="stylesheet" th:href="@{/styles/mobile.css}">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+<div class="wrapper">
+  <form  th:action="@{/signup}" method="post">
+    <h1>Registrace</h1>
+    <div class="input-box">
+      <input type="text" placeholder="Uživatelské jméno" name="username" required>
+      <i class='bx  bx-user'></i>
+    </div>
+    <div class="input-box">
+      <input type="email" placeholder="E-mail" name="email" required>
+      <i class='bx  bx-envelope'></i>
+    </div>
+    <div class="input-box">
+      <input type="password" placeholder="Heslo" name="password" required>
+      <i class='bx  bx-lock'></i>
+    </div>
+
+    <fieldset class="role-group">
+      <legend class="sr-only">Zvolte roli</legend>
+
+      <input type="radio" id="role-owner" name="role" value="OWNER" required>
+      <label for="role-owner" class="role-btn">Vlastník</label>
+
+      <input type="radio" id="role-worker" name="role" value="WORKER">
+      <label for="role-worker" class="role-btn alt">Pracovník</label>
+    </fieldset>
+
+    <button type="submit" class="btn">Registrovat se</button>
+    <div th:if="${error}" class="error" th:text="${error}"></div>
+
+  </form>
+
+</div>
+
+</body>
+</html>

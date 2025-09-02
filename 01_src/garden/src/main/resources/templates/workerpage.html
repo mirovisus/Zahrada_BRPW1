@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Home</title>
+
+    <link rel="stylesheet" th:href="@{/styles/style.css}">
+    <link rel="stylesheet" th:href="@{/styles/mobile.css}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body class="home">
+<div th:if="${success}" class="success-message" th:text="${success}"></div>
+<div th:if="${error}" class="error-message" th:text="${error}"></div>
+
+<div class="logout-box">
+    <form th:action="@{/logout}" method="post">
+        <button type="submit" class="btn">Odhlásit se</button>
+    </form>
+</div>
+
+<div class="sidebar">
+    <div class="profil">
+        <img th:src="@{/images/profil-man.jpg}" class="avatar" alt="Profilovka" />
+        <div class="user-info">
+            <h2 th:text="${username}">Uživatel</h2>
+            <p class="role" th:switch="${role}">
+                <span th:case="${T(fei.semprace.garden.model.Role).OWNER}">Vlastník zahrady</span>
+                <span th:case="${T(fei.semprace.garden.model.Role).WORKER}">Pracovník</span>
+                <span th:case="*">—</span>
+            </p>
+        </div>
+    </div>
+
+    <form th:action="@{/home/update}" method="post">
+        <div class="input-box">
+            <input type="text" placeholder="Uživatelské jméno" name="username" th:value="${username}" required>
+            <i class='bx  bx-user'></i>
+        </div>
+        <div class="input-box">
+            <input type="email" placeholder="E-mail" name="email" th:value="${email}" required>
+            <i class='bx  bx-envelope'></i>
+        </div>
+        <div class="input-box">
+            <input type="password" placeholder="Nové heslo" name="password" required>
+            <i class='bx  bx-lock'></i>
+        </div>
+
+        <button type="submit" class="btn">Uložit</button>
+        <div th:if="${error}" class="error" th:text="${error}"></div>
+
+    </form>
+
+    <form th:action="@{/home/delete}" method="post" onsubmit="return confirm('Are you sure you want to delete your account?');">
+        <button type="submit" class="btn delete">Smazat účet</button>
+    </form>
+
+</div>
+
+<div class="main-content">
+    <div class="news">
+        <h1 th:text="'Ahoj, ' + ${username} + '!'">Ahoj, uživateli!</h1>
+        <p class="status">Vše je aktuální, <strong>žádné nové zprávy</strong></p>
+    </div>
+
+    <div class="dashboard">
+        <h3>Najít práci:</h3>
+
+        <form class="form-filter-city" th:action="@{/home}" method="get">
+            <input type="text" class="filter-input" name="city" th:value="${cityFilter}" placeholder="Město (filtr)"
+                   style="flex:0 0 220px;">
+            <button type="submit" class="btn filter-btn">Filtrovat</button>
+            <a th:href="@{/home}" class="btn btn-secondary filter-btn">Zrušit filtr</a>
+        </form>
+
+        <div th:if="${#lists.isEmpty(requests)}">
+            <p>Nebyly nalezeny žádné požadavky.</p>
+        </div>
+
+        <div th:if="${!#lists.isEmpty(requests)}" class="requests-list">
+            <a th:each="r : ${requests}"
+               th:href="@{/request/{id}(id=${r.id})}"
+               target="_blank"
+               class="request-card">
+
+                <div class="rc-header">
+                    <span class="rc-city" th:text="${r.garden != null && r.garden.city != null ? r.garden.city : '—'}">Město</span>
+                    <span class="rc-icon">
+                        <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                              fill="currentColor" viewBox="0 0 24 24" >
+                        <!--Boxicons v3.0 https://boxicons.com | License  https://docs.boxicons.com/free-->
+                            <path d="M17 16V7H8v2h5.59l-6.3 6.29 1.42 1.42 6.29-6.3V16z"></path>
+                        </svg>
+                    </span>
+                </div>
+
+                <p class="rc-description"
+                   th:text="${r.description}">Krátký popis požadavku…</p>
+
+                <div class="rc-footer">
+                    <time th:text="${#temporals.format(r.createdAt, 'dd.MM.yyyy')}">01.01.2025</time>
+                </div>
+            </a>
+        </div>
+
+
+    </div>
+</div>
+
+</body>
+</html>

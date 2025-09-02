@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Požadavek</title>
+
+    <link rel="stylesheet" th:href="@{/styles/style.css}">
+    <link rel="stylesheet" th:href="@{/styles/mobile.css}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body class="home">
+<div class="request-layout">
+
+    <div class="sidebar request">
+        <img class="request-photo"
+             th:src="${request.garden != null && request.garden.imagePath != null} ? ${request.garden.imagePath} : @{/images/garden-placeholder.jpg}"
+             alt="Foto zahrady">
+    </div>
+
+    <div class="form-container request-panel">
+
+        <a class="close-form-btn" th:href="@{/home}">
+            <i class='bx bx-x'></i>
+        </a>
+
+        <div class="rd-headgroup">
+            <h3 class="rd-heading">
+                Název zahrady:&nbsp;
+                <span class="rd-strong"
+                      th:text="${
+                (garden != null && garden.name != null) ? garden.name
+                  : (request.garden != null && request.garden.name != null) ? request.garden.name
+                  : '—'
+            }">—</span>
+            </h3>
+
+            <h3 class="rd-heading">
+                Adresa zahrady:&nbsp;
+                <span class="rd-strong"
+                      th:text="${
+                (garden != null && garden.address != null)
+                 ? (garden.address.street + ' ' + garden.address.houseNumber + ', ' + garden.address.city)
+                 : (request.garden != null && request.garden.city != null) ? request.garden.city : '—'
+            }">—</span>
+            </h3>
+
+            <h3 class="rd-heading">
+                Datum:&nbsp;
+                <span class="rd-strong"
+                      th:text="${#temporals.format(request.createdAt, 'dd.MM.yyyy')}">01.01.2025</span>
+            </h3>
+        </div>
+
+        <label class="rd-label" for="req-desc">Text požadavku:</label>
+        <textarea id="req-desc" class="request-desc" readonly
+                  th:text="${request.description}">Popis požadavku…</textarea>
+
+        <form th:action="@{/request/apply/{id}(id=${request.id})}" method="post" class="rd-actions">
+            <button type="submit" class="btn btn-primary">
+                Přihlásit se k práci
+            </button>
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

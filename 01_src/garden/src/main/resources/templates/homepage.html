@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Home</title>
+
+    <link rel="stylesheet" th:href="@{/styles/style.css}">
+    <link rel="stylesheet" th:href="@{/styles/mobile.css}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body class="home">
+<div th:if="${success}" class="success-message" th:text="${success}"></div>
+<div th:if="${error}" class="error-message" th:text="${error}"></div>
+
+<div class="logout-box">
+    <form th:action="@{/logout}" method="post">
+        <button type="submit" class="btn">Odhlásit se</button>
+    </form>
+</div>
+
+<div class="sidebar">
+    <div class="profil">
+        <!--            <img src="../static/images/profil-man.jpg" class="avatar" alt="Profilovka" />-->
+        <img th:src="@{/images/profil-man.jpg}" class="avatar" alt="Profilovka" />
+        <div class="user-info">
+            <h2 th:text="${username}">Uživatel</h2>
+            <p class="role" th:switch="${role}">
+                <span th:case="${T(fei.semprace.garden.model.Role).OWNER}">Vlastník zahrady</span>
+                <span th:case="${T(fei.semprace.garden.model.Role).WORKER}">Pracovník</span>
+                <span th:case="*">—</span>
+            </p>
+        </div>
+    </div>
+
+    <form th:action="@{/home/update}" method="post">
+        <div class="input-box">
+            <input type="text" placeholder="Uživatelské jméno" name="username" th:value="${username}" required>
+            <i class='bx  bx-user'></i>
+        </div>
+        <div class="input-box">
+            <input type="email" placeholder="E-mail" name="email" th:value="${email}" required>
+            <i class='bx  bx-envelope'></i>
+        </div>
+        <div class="input-box">
+            <input type="password" placeholder="Nové heslo" name="password" required>
+            <i class='bx  bx-lock'></i>
+        </div>
+
+        <button type="submit" class="btn">Uložit</button>
+        <div th:if="${error}" class="error" th:text="${error}"></div>
+
+    </form>
+
+    <form th:action="@{/home/delete}" method="post" onsubmit="return confirm('Are you sure you want to delete your account?');">
+        <button type="submit" class="btn delete">Smazat účet</button>
+    </form>
+
+</div>
+
+<div class="main-content">
+    <div class="news">
+        <h1 th:text="'Ahoj, ' + ${username} + '!'">Ahoj, uživateli!</h1>
+        <p class="status">Vše je aktuální, <strong>žádné nové zprávy</strong></p>
+    </div>
+
+    <div class="dashboard">
+        <h3>Moje zahrady:</h3>
+
+        <div class="list-gardens">
+            <div th:each="garden : ${gardens}" class="garden-card"
+                 th:onclick="|window.location.href='@{/garden/edit/{id}(id=${garden.id})}'|"
+                 style="cursor:pointer;">
+
+                <img th:if="${garden.previewImageId != null}"
+                     th:src="@{'/api/images/' + ${garden.previewImageId}}"
+                     alt="Garden Image"
+                     class="garden-image"/>
+
+                <p class="title" th:text="${garden.name}">Název zahrady</p>
+
+                <p class="address"
+                   th:text="${garden.address?.street + ' ' + garden.address?.houseNumber
+                   + ', ' + garden.address?.city}">Ulice číslo, Město</p>
+            </div>
+
+            <!-- Add a new garden card -->
+            <div class="garden-card add-new"
+                 th:onclick="|window.location.href='@{/garden/add}'|"
+                 style="cursor:pointer;">
+                <span>+</span>
+                <p>Vytvořit novou zahradu</p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
